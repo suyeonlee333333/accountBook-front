@@ -2,7 +2,8 @@ import './App.css';
 import {useState, useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
+import WirteComponent from "./write.jsx";
 //import 'react-big-calendar/lib/css/react-big-calendar.css'
 //import { Calendar, momentLocalizer } from 'react-big-calendar'
 //import moment from 'moment'
@@ -56,8 +57,8 @@ export default function App() {
   function CalendarPage () {
   const [currentDate,setCurrentDate]=useState(new Date());
   const [dates, setDates]=useState([]);
-  const navigate = useNavigate();
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null); // 선택된 날짜
+  const [records, setRecords] = useState({}); // 날짜별 소비 기록 저장
 
   useEffect(()=> {
     renderCalender();
@@ -126,9 +127,16 @@ export default function App() {
       setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
     };
 
-    const onDateClick = (dateStr) => {
-    setSelectedDate(dateStr);          // 하이라이트
-    navigate(`/date/${dateStr}`);      // 해당 날짜 상세 페이지로 이동
+    const handleDateClick = (dateStr) => {
+    // const selected = new Date(
+    //   currentDate.getFullYear(),
+    //   currentDate.getMonth(),
+    //   day
+    // )
+    //   .toISOString()
+    //   .split("T")[0];
+
+    setSelectedDate(dateStr);
   };
 
 
@@ -149,27 +157,37 @@ export default function App() {
       </div>
 
       <div className="dates">
-        {dates.map((item) => (
+        {dates.map((d) => (
           <div
-            key={item.dateStr}                                     // ✅ 고유 key
-            className={`date ${item.type === 'this' ? 'this-month' : 'other-month'}`}
-            onClick={() => onDateClick(item.dateStr)}               // ✅ 문자열 날짜로 이동
+            key={d.dateStr}
+            onClick={() => d.type === "this" && handleDateClick(d.dateStr)} 
             style={{
-              padding: 10,
-              cursor: "pointer",
-              backgroundColor: selectedDate === item.dateStr ? "lightblue" : "transparent", // ✅ 하이라이트
-              border: "1px solid #ccc",
-              borderRadius: 5,
-              margin: 2,
-              display: "inline-block",
-              width: 30,
-              textAlign: "center",
+            padding: "10px",
+            cursor: d.type === "this" ? "pointer" : "default",
+              backgroundColor: selectedDate === d.dateStr ? "#7AD5CC" : "white",
             }}
           >
-            {item.day}                                              {/* 셀에는 숫자만 표기 */}
+            {d.day}
           </div>
         ))}
       </div>
+      <span>
+        <button onClick={() => <WirteComponent />}>+</button>
+      </span>
+
+      <div style={{ marginTop: 16, borderTop: "1px solid #ddd", paddingTop: 12 }}>
+      {selectedDate ? (
+        <h5>{selectedDate} 소비 기록 (준비중)</h5>
+      ) : (
+        <span>날짜를 선택하면 소비 기록이 여기에 표시됩니다.</span>
+      )}
+    </div>
+
+    <div>
+      <p>미리보기. 테스트 </p>
+      <WirteComponent />
+    </div>
+
       </>
     )
   };
