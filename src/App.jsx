@@ -2,7 +2,7 @@ import './App.css';
 import {useState, useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
 //import 'react-big-calendar/lib/css/react-big-calendar.css'
 //import { Calendar, momentLocalizer } from 'react-big-calendar'
 //import moment from 'moment'
@@ -40,7 +40,7 @@ export default function App() {
 
       <>
       <Navbar bg="light" data-bs-theme="light">
-        <Container className="under-bar"style={{weight: '300px'}}>
+        <Container className="under-bar"style={{width: '100%'}}>
           <Nav className="me-auto">
             <Nav.Link href="#home">home</Nav.Link>
             <Nav.Link href="#shop">shop</Nav.Link>
@@ -62,6 +62,13 @@ export default function App() {
   useEffect(()=> {
     renderCalender();
   },[currentDate]);
+
+  const fmtYMD = (d) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
 
   const renderCalender = () => {
     let date = currentDate;
@@ -90,13 +97,26 @@ export default function App() {
       nextDates.push(i);
     }
 
-    const allDates = prevDates
-        .map((d) => ({ date: d, type: "prev" }))
-        .concat(thisDates.map((d) => ({ date: d, type: "this" })))
-        .concat(nextDates.map((d) => ({ date: d, type: "next" })));
+    const cells = [
+      ...prevDates.map(d => ({
+        dateStr: fmtYMD(new Date(viewYear, viewMonth - 1, d)),
+        day: d,
+        type: 'prev',
+      })),
+      ...thisDates.map(d => ({
+        dateStr: fmtYMD(new Date(viewYear, viewMonth, d)),
+        day: d,
+        type: 'this',
+      })),
+      ...nextDates.map(d => ({
+        dateStr: fmtYMD(new Date(viewYear, viewMonth + 1, d)),
+        day: d,
+        type: 'next',
+      })),
+    ];
 
-      setDates(allDates);
-    };
+    setDates(cells);
+  };
 
     const prevMonth = () => {
       setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
@@ -106,87 +126,59 @@ export default function App() {
       setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
     };
 
-  //   const onDateClick = (date) => {
-  //   setSelectedDate(date);
-  //   navigate(`/date/${date}`);
-  //   };
+    const onDateClick = (dateStr) => {
+    setSelectedDate(dateStr);          // 하이라이트
+    navigate(`/date/${dateStr}`);      // 해당 날짜 상세 페이지로 이동
+  };
 
-
-  //   {dates.map((item, idx) => {
-  // // 현재 날짜 기준 연도, 월 가져오기
-  // const realYear = (() => {
-  //   if (item.type === "prev") {
-  //     if (currentDate.getMonth() === 0) return currentDate.getFullYear() - 1;
-  //     else return currentDate.getFullYear();
-  //   } else if (item.type === "next") {
-  //     if (currentDate.getMonth() === 11) return currentDate.getFullYear() + 1;
-  //     else return currentDate.getFullYear();
-  //   } else {
-  //     return currentDate.getFullYear();
-  //   }
-  // })();
-
-  // const realMonth = (() => {
-  //   if (item.type === "prev") {
-  //     if (currentDate.getMonth() === 0) return 11;
-  //     else return currentDate.getMonth() - 1;
-  //   } else if (item.type === "next") {
-  //     if (currentDate.getMonth() === 11) return 0;
-  //     else return currentDate.getMonth() + 1;
-  //   } else {
-  //     return currentDate.getMonth();
-  //   }
-  // })();
-  //   })}
-
-  //   const formattedMonth = String(realMonth + 1).padStart(2, "0");
-  //   const formattedDate = String(item.date).padStart(2, "0");
-
-  //   const fullDateStr = `${realYear}-${formattedMonth}-${formattedDate}`;
 
     return (
       <>
         <div className="header">
-          <button onClick={prevMonth}>◀</button>
-          <span>
-            {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
-          </span>
-          <button onClick={nextMonth}>▶</button>
-        </div>
-        <div className="weekdays">
-          {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
-            <div key={day} className="weekday">{day}</div>
-          ))}
-        </div>
-        <div className="dates">
-          {dates.map((item,idx)=>(
-            <div key={idx} className={`date ${item.type=='this'? "this-month" : "other-month"}`}>{item.date}
-            </div>
-          ))}
-        </div>
+        <button onClick={prevMonth}>◀</button>
+        <span>
+          {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
+        </span>
+        <button onClick={nextMonth}>▶</button>
+      </div>
 
-        {/* <div
-        key={fullDateStr}
-        className={`date ${item.type === "this" ? "this-month" : "other-month"}`}
-        onClick={() => onDateClick(fullDateStr)}
-        style={{
-          padding: 10,
-          cursor: "pointer",
-          backgroundColor: selectedDate === fullDateStr ? "lightblue" : "transparent",
-          border: "1px solid #ccc",
-          borderRadius: 5,
-          margin: 2,
-          display: "inline-block",
-          width: 30,
-          textAlign: "center",
-        }}
-      >
-        {item.date}
-      </div> */}
+      <div className="weekdays">
+        {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
+          <div key={day} className="weekday">{day}</div>
+        ))}
+      </div>
+
+      <div className="dates">
+        {dates.map((item) => (
+          <div
+            key={item.dateStr}                                     // ✅ 고유 key
+            className={`date ${item.type === 'this' ? 'this-month' : 'other-month'}`}
+            onClick={() => onDateClick(item.dateStr)}               // ✅ 문자열 날짜로 이동
+            style={{
+              padding: 10,
+              cursor: "pointer",
+              backgroundColor: selectedDate === item.dateStr ? "lightblue" : "transparent", // ✅ 하이라이트
+              border: "1px solid #ccc",
+              borderRadius: 5,
+              margin: 2,
+              display: "inline-block",
+              width: 30,
+              textAlign: "center",
+            }}
+          >
+            {item.day}                                              {/* 셀에는 숫자만 표기 */}
+          </div>
+        ))}
+      </div>
       </>
     )
   };
+
+
   function DateDetailPage () {
-    
+    const { date } = useParams();
+    return (
+      null
+    )
   };
 }

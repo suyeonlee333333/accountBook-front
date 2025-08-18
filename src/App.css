@@ -11,14 +11,19 @@
     }
 
     .weekdays, .dates {
-    display: grid;
     grid-template-columns: repeat(7, 1fr);
+    display: grid;
+    /* grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); */
+    gap: 0.5rem;
     }
 
     .weekday, .date {
-    padding: 8px;
+    padding: 0.5rem;
+    font-size: 1rem;
     text-align: center;
     }
+
+
 
     .other-month {
     color: #ccc;
@@ -29,7 +34,7 @@
     }
 
     .top-bar {
-        width: 100vw;
+        
         display: left;
         align-items: center;
     }
