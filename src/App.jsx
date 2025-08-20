@@ -2,8 +2,8 @@ import './App.css';
 import {useState, useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
-import WirteComponent from "./write.jsx";
+import { BrowserRouter, Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
+import WriteComponent from "./write.jsx";
 //import 'react-big-calendar/lib/css/react-big-calendar.css'
 //import { Calendar, momentLocalizer } from 'react-big-calendar'
 //import moment from 'moment'
@@ -33,6 +33,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<CalendarPage />} />
         <Route path="/date/:date" element={<DateDetailPage />} />
+        <Route path="/writebox" element={<WriteComponent />} />
       </Routes>
     </BrowserRouter>
     </>
@@ -59,10 +60,14 @@ export default function App() {
   const [dates, setDates]=useState([]);
   const [selectedDate, setSelectedDate] = useState(null); // 선택된 날짜
   const [records, setRecords] = useState({}); // 날짜별 소비 기록 저장
+  const [showWrite, setShowWrite] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(()=> {
     renderCalender();
   },[currentDate]);
+
 
   const fmtYMD = (d) => {
     const y = d.getFullYear();
@@ -139,6 +144,19 @@ export default function App() {
     setSelectedDate(dateStr);
   };
 
+    useEffect(() => {
+  if (location.state) {
+    setRecords((prev) => {
+      const date = location.state.date;
+      return {
+        ...prev,
+        [date]: [...(prev[date] || []), location.state]
+      };
+    });
+  }
+}, [location.state]);
+
+
 
     return (
       <>
@@ -172,8 +190,32 @@ export default function App() {
         ))}
       </div>
       <span>
-        <button onClick={() => <WirteComponent />}>+</button>
+        <button onClick={() => 
+        {navigate("/writebox");
+        setShowWrite(true)}}>+</button>
       </span>
+
+      {showWrite && (
+        <div style={{ marginTop: 20 }}>
+          <div style={{ marginTop: "20px" }}>
+        <h3>소비 기록</h3>
+        {Object.entries(records).map(([date, recs]) => (
+        <div key={date}>
+          <h4>{date}</h4>
+          {recs.map((r, i) => (
+            <div key={i}>
+              <p>금액: {r.amount}원</p>
+              <p>태그: {r.tags.join(", ")}</p>
+              <p>메모: {r.memo}</p>
+            </div>
+          ))}
+  </div>
+))}
+      </div>
+          {/* <WriteComponent /> */}
+          <button onClick={() => setShowWrite(false)}>닫기</button>
+        </div>
+      )}
 
       <div style={{ marginTop: 16, borderTop: "1px solid #ddd", paddingTop: 12 }}>
       {selectedDate ? (
@@ -183,10 +225,7 @@ export default function App() {
       )}
     </div>
 
-    <div>
-      <p>미리보기. 테스트 </p>
-      <WirteComponent />
-    </div>
+
 
       </>
     )
