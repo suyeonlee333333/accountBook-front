@@ -4,11 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { BrowserRouter, Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
 import WriteComponent from "./write.jsx";
-//import 'react-big-calendar/lib/css/react-big-calendar.css'
-//import { Calendar, momentLocalizer } from 'react-big-calendar'
-//import moment from 'moment'
-
-//const localizer = momentLocalizer(moment)
+import { IoGiftOutline, IoCalendarOutline, IoSettingsOutline,
+  IoInfiniteOutline, IoTodayOutline, IoPodiumOutline}
+  from "react-icons/io5";
 
 
 
@@ -21,9 +19,9 @@ export default function App() {
       <Navbar bg="light" data-bs-theme="light" className="top-bar">
         <Container className="top-bar">
           <Nav className="me-auto">
-            <Nav.Link href="#stats">통계</Nav.Link>
-            <Nav.Link href="#check">출석체크</Nav.Link>
-            <Nav.Link href="#couple-linking">커플 연결</Nav.Link>
+            <Nav.Link href="#stats"><IoPodiumOutline /></Nav.Link>
+            <Nav.Link href="#check"><IoTodayOutline /></Nav.Link>
+            <Nav.Link href="#couple-linking"><IoInfiniteOutline /></Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -44,9 +42,9 @@ export default function App() {
       <Navbar bg="light" data-bs-theme="light">
         <Container className="under-bar"style={{width: '100%'}}>
           <Nav className="me-auto">
-            <Nav.Link href="#home">home</Nav.Link>
-            <Nav.Link href="#shop">shop</Nav.Link>
-            <Nav.Link href="#settings">settings</Nav.Link>
+            <Nav.Link href="#home"><IoCalendarOutline /></Nav.Link>
+            <Nav.Link href="#shop"><IoGiftOutline /></Nav.Link>
+            <Nav.Link href="#settings"><IoSettingsOutline /></Nav.Link>
           </Nav>
         </Container>
       </Navbar>

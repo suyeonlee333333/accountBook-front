@@ -94,6 +94,17 @@ button.active {
     margin: 10px 0;
 }
 
+.emotion-tag button {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* 숫자 입력 */
 .write-money {
     display: flex;
