@@ -1,13 +1,12 @@
 import './App.css';
-import './App.jsx';
 import {useState, useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { BrowserRouter, Routes, Route, useParams, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams, useNavigate, useLocation } from 'react-router-dom';
 import flex from './image/flex.png';
 import 기분전환 from './image/기분전환.png';
 import 소확행 from './image/소확행.png';
-import 스트레스 from './image/스트레스 해소.png';
+import 스트레스 from './image/스트레스_해소.png';
 import 슬픔 from './image/슬픔.png';
 import 충동구매 from './image/충동구매.png';
 
@@ -18,11 +17,19 @@ export default function WritePage() {
     const [note, setNote] = useState('');
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const dateFromCalendar = location.state?.date;
 
     const handleSubmit = () => {
-        const data = {amount, note, date: new Date().toLocaleDateString()};
-        navigate('/',{state: data});
-    }
+    const data = {
+        amount: Number(amount) || 0,
+        tags: selectedTag ? [selectedTag] : [],
+        memo: note,
+        date: dateFromCalendar || new Date().toISOString().split("T")[0]
+    };
+    navigate("/", { state: data });
+    };
     // const onWriteClick = (writebox) => {
     // navigate('/writebox');}
     return (
@@ -32,32 +39,32 @@ export default function WritePage() {
                     <button>
                         <img src={기분전환} alt="기분전환"
                         width="50px" style={{ cursor: "pointer" }}
-                        onClick={() => {console.log(0);}}/>
+                        onClick={() => setSelectedTag("기분전환")}/>
                     </button>
                     <button>
                         <img src={스트레스} alt="스트레스"
                         width="50px" style={{ cursor: "pointer" }}
-                        onClick={() => {console.log(0);}} />
+                        onClick={() => setSelectedTag("스트레스 해소")} />
                     </button>
                     <button>
                         <img src={충동구매} alt="충동구매"
-                        width="60px" style={{ cursor: "pointer" }}
-                        onClick={() => {console.log(0);}} />
+                        width="50px" style={{ cursor: "pointer" }}
+                        onClick={() => setSelectedTag("충동구매")} />
                     </button>
                     <button>
                         <img src={flex} alt="flex"
-                        width="60px" style={{ cursor: "pointer" }}
-                        onClick={() => {console.log(0);}} />
+                        width="50px" style={{ cursor: "pointer" }}
+                        onClick={() => setSelectedTag("flex")} />
                     </button>
                     <button>
                         <img src={슬픔} alt="슬픔"
-                        width="60px" style={{ cursor: "pointer" }}
-                        onClick={() => {console.log(0);}} />
+                        width="50px" style={{ cursor: "pointer" }}
+                        onClick={() => setSelectedTag("슬픔")} />
                     </button>
                     <button>
                         <img src={소확행} alt="소확행"
-                        width="60px" style={{ cursor: "pointer" }}
-                        onClick={() => {console.log(0);}} />
+                        width="50px" style={{ cursor: "pointer" }}
+                        onClick={() => setSelectedTag("소확행")} />
                     </button>
                 </div>
                 {/* <div>{selectedDate}</div> */}

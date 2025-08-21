@@ -1,12 +1,9 @@
 import './App.css';
-import {useState, useEffect} from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState, useEffect } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { BrowserRouter, Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useParams, useLocation, useNavigate } from 'react-router-dom';
 import WriteComponent from "./write.jsx";
-import { IoGiftOutline, IoCalendarOutline, IoSettingsOutline,
-  IoInfiniteOutline, IoTodayOutline, IoPodiumOutline}
-  from "react-icons/io5";
+import { IoGiftOutline, IoCalendarOutline, IoSettingsOutline, IoInfiniteOutline, IoTodayOutline, IoPodiumOutline } from "react-icons/io5";
 
 
 
@@ -14,43 +11,38 @@ export default function App() {
   
 
   return (
-    <div className="App">
-      <>
-      <Navbar bg="light" data-bs-theme="light" className="top-bar">
-        <Container className="top-bar">
-          <Nav className="me-auto">
-            <Nav.Link href="#stats"><IoPodiumOutline /></Nav.Link>
-            <Nav.Link href="#check"><IoTodayOutline /></Nav.Link>
-            <Nav.Link href="#couple-linking"><IoInfiniteOutline /></Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+    <BrowserRouter>
+      <div className="App">
+        {/* 상단 네비게이션 바 */}
+        <Navbar bg="light" data-bs-theme="light" className="top-bar">
+          <Container className="top-bar">
+            <Nav className="me-auto">
+              <Nav.Link as={Link} to="/stats"><IoPodiumOutline /></Nav.Link>
+              <Nav.Link as={Link} to="/check"><IoTodayOutline /></Nav.Link>
+              <Nav.Link as={Link} to="/couple-linking"><IoInfiniteOutline /></Nav.Link>
+            </Nav>
+          </Container>
+        </Navbar>
 
+        {/* 라우팅 영역 */}
+        <Routes>
+          <Route path="/" element={<CalendarPage />} />
+          <Route path="/date/:date" element={<DateDetailPage />} />
+          <Route path="/writebox" element={<WriteComponent />} />
+        </Routes>
 
-      <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<CalendarPage />} />
-        <Route path="/date/:date" element={<DateDetailPage />} />
-        <Route path="/writebox" element={<WriteComponent />} />
-      </Routes>
+        {/* 하단 네비게이션 바 */}
+        <Navbar bg="light" data-bs-theme="light">
+          <Container className="under-bar" style={{width: '100%'}}>
+            <Nav className="me-auto justify-content-around w-100">
+              <Nav.Link as={Link} to="/"><IoCalendarOutline /></Nav.Link>
+              <Nav.Link as={Link} to="/shop"><IoGiftOutline /></Nav.Link>
+              <Nav.Link as={Link} to="/settings"><IoSettingsOutline /></Nav.Link>
+            </Nav>
+          </Container>
+        </Navbar>
+      </div>
     </BrowserRouter>
-    </>
-  
-    
-
-      <>
-      <Navbar bg="light" data-bs-theme="light">
-        <Container className="under-bar"style={{width: '100%'}}>
-          <Nav className="me-auto">
-            <Nav.Link href="#home"><IoCalendarOutline /></Nav.Link>
-            <Nav.Link href="#shop"><IoGiftOutline /></Nav.Link>
-            <Nav.Link href="#settings"><IoSettingsOutline /></Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
-    </>
-  
-</div>
   )
 
   function CalendarPage () {
@@ -58,7 +50,7 @@ export default function App() {
   const [dates, setDates]=useState([]);
   const [selectedDate, setSelectedDate] = useState(null); // 선택된 날짜
   const [records, setRecords] = useState({}); // 날짜별 소비 기록 저장
-  const [showWrite, setShowWrite] = useState(false);
+  //const [showWrite, setShowWrite] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -130,29 +122,21 @@ export default function App() {
       setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
     };
 
-    const handleDateClick = (dateStr) => {
-    // const selected = new Date(
-    //   currentDate.getFullYear(),
-    //   currentDate.getMonth(),
-    //   day
-    // )
-    //   .toISOString()
-    //   .split("T")[0];
-
-    setSelectedDate(dateStr);
-  };
+    const handleDateClick = (dateStr) => { setSelectedDate(dateStr);};
 
     useEffect(() => {
   if (location.state) {
-    setRecords((prev) => {
+    setRecords(prev => {
       const date = location.state.date;
       return {
         ...prev,
         [date]: [...(prev[date] || []), location.state]
       };
     });
+    // state를 사용한 후 초기화
+    navigate(".", { replace: true, state: null });
   }
-}, [location.state]);
+}, [location.state, navigate]);
 
 
 
@@ -187,41 +171,38 @@ export default function App() {
           </div>
         ))}
       </div>
-      <span>
-        <button onClick={() => 
-        {navigate("/writebox");
-        setShowWrite(true)}}>+</button>
-      </span>
+      <button
+      onClick={() => {
+        if (!selectedDate) {
+          alert("날짜를 먼저 선택하세요!");
+          return;
+        }
+        navigate("/writebox", { state: { date: selectedDate } });
+      }}>
+      +
+      </button>
 
-      {showWrite && (
-        <div style={{ marginTop: 20 }}>
-          <div style={{ marginTop: "20px" }}>
-        <h3>소비 기록</h3>
-        {Object.entries(records).map(([date, recs]) => (
-        <div key={date}>
-          <h4>{date}</h4>
-          {recs.map((r, i) => (
-            <div key={i}>
-              <p>금액: {r.amount}원</p>
-              <p>태그: {r.tags.join(", ")}</p>
-              <p>메모: {r.memo}</p>
-            </div>
-          ))}
-  </div>
-))}
-      </div>
-          {/* <WriteComponent /> */}
-          <button onClick={() => setShowWrite(false)}>닫기</button>
+
+      <div className="records mt-4">
+          {selectedDate ? (
+            <>
+              <h5>{selectedDate} 소비 기록</h5>
+              {!(records[selectedDate]?.length) ? (
+                <div className="text-muted">아직 기록이 없습니다.</div>
+              ) : (
+                records[selectedDate].map((r, i) => (
+                  <div key={i} className="card p-2 mb-2 shadow-sm">
+                    <p>금액: {r.amount}원</p>
+                    <p>태그: {r.tags?.join(", ") || "-"}</p>
+                    <p>메모: {r.memo || "-"}</p>
+                  </div>
+                ))
+              )}
+            </>
+          ) : (
+            <span className="text-muted">날짜를 선택하면 소비 기록이 표시됩니다.</span>
+          )}
         </div>
-      )}
-
-      <div style={{ marginTop: 16, borderTop: "1px solid #ddd", paddingTop: 12 }}>
-      {selectedDate ? (
-        <h5>{selectedDate} 소비 기록 (준비중)</h5>
-      ) : (
-        <span>날짜를 선택하면 소비 기록이 여기에 표시됩니다.</span>
-      )}
-    </div>
 
 
 
