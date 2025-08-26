@@ -4,9 +4,10 @@ import { Navbar, Nav, Container } from 'react-bootstrap';
 import { BrowserRouter, Routes, Route, Link, useParams, useLocation, useNavigate } from 'react-router-dom';
 import WriteComponent from "./write.jsx";
 import { IoGiftOutline, IoCalendarOutline, IoSettingsOutline, IoInfiniteOutline, IoTodayOutline, IoPodiumOutline } from "react-icons/io5";
+import DailyStatFetcher from "./DailyStatFetcher.jsx";
+import Login from "./login.jsx";
 
-
-
+  
 export default function App() {
   
 
@@ -14,12 +15,12 @@ export default function App() {
     <BrowserRouter>
       <div className="App">
         {/* 상단 네비게이션 바 */}
-        <Navbar bg="light" data-bs-theme="light" className="top-bar">
+        <Navbar>
           <Container className="top-bar">
-            <Nav className="me-auto">
-              <Nav.Link as={Link} to="/stats"><IoPodiumOutline /></Nav.Link>
-              <Nav.Link as={Link} to="/check"><IoTodayOutline /></Nav.Link>
-              <Nav.Link as={Link} to="/couple-linking"><IoInfiniteOutline /></Nav.Link>
+            <Nav className="navbar">
+              <Nav.Link as={Link} to="/stats" className="top-icons"><IoPodiumOutline /></Nav.Link>
+              <Nav.Link as={Link} to="/check" className="top-icons"><IoTodayOutline /></Nav.Link>
+              <Nav.Link as={Link} to="/couple-linking" className="top-icons"><IoInfiniteOutline /></Nav.Link>
             </Nav>
           </Container>
         </Navbar>
@@ -29,12 +30,13 @@ export default function App() {
           <Route path="/" element={<CalendarPage />} />
           <Route path="/date/:date" element={<DateDetailPage />} />
           <Route path="/writebox" element={<WriteComponent />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
 
         {/* 하단 네비게이션 바 */}
-        <Navbar bg="light" data-bs-theme="light">
-          <Container className="under-bar" style={{width: '100%'}}>
-            <Nav className="me-auto justify-content-around w-100">
+        <Navbar>
+          <Container className="under-bar">
+            <Nav className="under-nav">
               <Nav.Link as={Link} to="/"><IoCalendarOutline /></Nav.Link>
               <Nav.Link as={Link} to="/shop"><IoGiftOutline /></Nav.Link>
               <Nav.Link as={Link} to="/settings"><IoSettingsOutline /></Nav.Link>
@@ -48,8 +50,12 @@ export default function App() {
   function CalendarPage () {
   const [currentDate,setCurrentDate]=useState(new Date());
   const [dates, setDates]=useState([]);
-  const [selectedDate, setSelectedDate] = useState(null); // 선택된 날짜
+  const [selectedDate, setSelectedDate] = useState(() => {
+  const today = new Date();
+  return today.toISOString().split("T")[0]; // YYYY-MM-DD 형식
+});
   const [records, setRecords] = useState({}); // 날짜별 소비 기록 저장
+  
   //const [showWrite, setShowWrite] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -140,6 +146,9 @@ export default function App() {
 
 
 
+
+
+
     return (
       <>
         <div className="header">
@@ -160,7 +169,7 @@ export default function App() {
         {dates.map((d) => (
           <div
             key={d.dateStr}
-            onClick={() => d.type === "this" && handleDateClick(d.dateStr)} 
+            onClick={() => d.type === "this" && handleDateClick(d.dateStr)}// handleDateClick(d.dateStr)
             style={{
             padding: "10px",
             cursor: d.type === "this" ? "pointer" : "default",
@@ -185,20 +194,22 @@ export default function App() {
 
       <div className="records mt-4">
           {selectedDate ? (
-            <>
-              <h5>{selectedDate} 소비 기록</h5>
-              {!(records[selectedDate]?.length) ? (
-                <div className="text-muted">아직 기록이 없습니다.</div>
-              ) : (
-                records[selectedDate].map((r, i) => (
-                  <div key={i} className="card p-2 mb-2 shadow-sm">
-                    <p>금액: {r.amount}원</p>
-                    <p>태그: {r.tags?.join(", ") || "-"}</p>
-                    <p>메모: {r.memo || "-"}</p>
-                  </div>
-                ))
-              )}
-            </>
+            <DailyStatFetcher d={{ type: "this", dateStr: selectedDate }} />
+            // <>
+            //   <h5>{selectedDate} 소비 기록</h5>
+            //   {!(records[selectedDate]?.length) ? (
+            //     <div className="text-muted">아직 기록이 없습니다.</div>
+            //   ) : (
+            //     records[selectedDate].map((r, i) => (
+            //       <div key={i} className="card p-2 mb-2 shadow-sm">
+            //         <span>{r.amount}원</span>
+            //         <span>({r.payment})</span> {/* 카드 or 현금 */}
+            //         <p>태그: {r.tags?.join(", ") || "-"}</p>
+            //         <p>메모: {r.memo || "-"}</p>
+            //       </div>
+            //     ))
+            //   )}
+            // </>
           ) : (
             <span className="text-muted">날짜를 선택하면 소비 기록이 표시됩니다.</span>
           )}

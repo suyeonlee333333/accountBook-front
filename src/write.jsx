@@ -1,6 +1,6 @@
 import './App.css';
 import {useState, useEffect} from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { BrowserRouter, Routes, Route, useParams, useNavigate, useLocation } from 'react-router-dom';
 import flex from './image/flex.png';
@@ -15,6 +15,7 @@ export default function WritePage() {
     const [selectedTag, setSelectedTag] = useState(null);
     const [amount, setAmount] = useState('');
     const [note, setNote] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState(''); // 기본값으로 카드 설정
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -24,6 +25,7 @@ export default function WritePage() {
     const handleSubmit = () => {
     const data = {
         amount: Number(amount) || 0,
+        paymentMethod: "카드", // 기본값으로 카드 설정, 필요시 수정 가능
         tags: selectedTag ? [selectedTag] : [],
         memo: note,
         date: dateFromCalendar || new Date().toISOString().split("T")[0]

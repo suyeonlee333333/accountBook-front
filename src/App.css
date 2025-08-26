@@ -2,6 +2,7 @@
     display: flex;
     justify-content: center;
     }
+    
     .header {
     display: flex;
     justify-content: center;
@@ -33,23 +34,34 @@
     }
 
     .top-bar {
-        
         display: left;
         align-items: center;
     }
 
+    .top-icons {
+        margin-right: 5%;
+        margin-left: 4%;
+    }
+
     .under-bar {
-        display:flex;
-        justify-content: center;
+        display: flex;
         align-items: center;
-        gap: auto;
+        justify-content: center;    
     }
 
-    .me-auto {
-        margin: auto;
-
+    .under-icons {
+        margin:25%; 
     }
 
+    .navbar {
+        width: 100%;
+    }
+
+    .under-bar .navbar {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
     .write-container {
         width: 100%;
         max-width: 1200px;
