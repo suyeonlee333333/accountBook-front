@@ -15,12 +15,30 @@ export default function WritePage() {
     const [selectedTag, setSelectedTag] = useState(null);
     const [amount, setAmount] = useState('');
     const [note, setNote] = useState('');
-    const [paymentMethod, setPaymentMethod] = useState(''); // 기본값으로 카드 설정
+    // const [paymentMethod, setPaymentMethod] = useState('');
+    const [activeCategory, setActiveCategory] = useState(null);
+    const [activeType, setActiveType] = useState(null);
+    const [activePayment, setActivePayment] = useState(null);
 
     const navigate = useNavigate();
     const location = useLocation();
 
     const dateFromCalendar = location.state?.date;
+
+    const payment =["신용카드","체크카드","현금","계좌이체","상품권","기타"];
+    const type = ["수입","지출"];
+    const categories = [
+    ["고정지출", "식비", "교통비", "생필품", "카페"],
+    ["도서", "교육", "문화생활", "쇼핑", "미용"],
+    ["선물", "건강", "경조사", "의료비", "기타"],
+    ];
+
+    
+
+
+    const handleClick = () => {
+        setIsActive(!isActive);
+    };
 
     const handleSubmit = () => {
     const data = {
@@ -35,84 +53,107 @@ export default function WritePage() {
     // const onWriteClick = (writebox) => {
     // navigate('/writebox');}
     return (
-        <>
-            <div className="write-container">
-                <div className="emotion-tag">
-                    <button>
-                        <img src={기분전환} alt="기분전환"
-                        width="50px" style={{ cursor: "pointer" }}
-                        onClick={() => setSelectedTag("기분전환")}/>
-                    </button>
-                    <button>
-                        <img src={스트레스} alt="스트레스"
-                        width="50px" style={{ cursor: "pointer" }}
-                        onClick={() => setSelectedTag("스트레스 해소")} />
-                    </button>
-                    <button>
-                        <img src={충동구매} alt="충동구매"
-                        width="50px" style={{ cursor: "pointer" }}
-                        onClick={() => setSelectedTag("충동구매")} />
-                    </button>
-                    <button>
-                        <img src={flex} alt="flex"
-                        width="50px" style={{ cursor: "pointer" }}
-                        onClick={() => setSelectedTag("flex")} />
-                    </button>
-                    <button>
-                        <img src={슬픔} alt="슬픔"
-                        width="50px" style={{ cursor: "pointer" }}
-                        onClick={() => setSelectedTag("슬픔")} />
-                    </button>
-                    <button>
-                        <img src={소확행} alt="소확행"
-                        width="50px" style={{ cursor: "pointer" }}
-                        onClick={() => setSelectedTag("소확행")} />
-                    </button>
-                </div>
-                {/* <div>{selectedDate}</div> */}
-                <div className="plus-minus">
-                    <button>지출</button>
-                    <button>수입</button>
-                </div>
-                <div className="wirte-money">
-                    <input type="number" placeholder="0원" value={amount} onChange={(e)=> setAmount(e.target.value)} />
-                </div>
-
-                <div className="money-category">
-                    <button>고정지출</button>
-                    <button>식비</button>
-                    <button>교통비</button>
-                    <button>생필품</button>
-                    <button>카페</button>
-                    <button>도서</button>
-                    <button>교육</button>
-                    <button>문화생활</button>
-                    <button>쇼핑</button>
-                    <button>미용</button>
-                    <button>선물</button>
-                    <button>건강</button>
-                    <button>경조사</button>
-                    <button>의료비</button>
-                    <button>기타</button>
-                </div>
-                <div className="type">
-                    <button>신용카드</button>
-                    <button>체크카드</button>
-                    <button>현금</button>
-                    <button>계좌이체</button>
-                    <button>상품권</button>
-                    <button>기타</button>
-                </div>
-                <div className="write-form">
-                    <span></span>
-                    <p>오늘의 씀씀</p>
-                    <div className="write-form-title">
-                        <input type="text" placeholder="오늘의 씀씀" value={note} onChange={(e)=>setNote(e.target.value)} />
-                    </div>
-
-                </div>
-                <button onClick={handleSubmit} className="close-button">저장</button>
+<>
+    <div className="write-container">
+        <div className="emotion-tag">
+            <button style={{
+                backgroundColor: selectedTag === "기분전환" ? "#a6b9da7e" : "transparent"
+            }}>
+                <img src={기분전환} alt="기분전환"
+                width="50px" style={{ cursor: "pointer" }}
+                onClick={() => setSelectedTag("기분전환")}/>
+            </button>
+            <button style={{
+                backgroundColor: selectedTag === "스트레스 해소" ? "#a6b9da7e" : "transparent"
+            }}>
+                <img src={스트레스} alt="스트레스"
+                width="50px" style={{ cursor: "pointer" }}
+                onClick={() => setSelectedTag("스트레스 해소")} />
+            </button>
+            <button style={{
+                backgroundColor: selectedTag === "충동구매" ? "#a6b9da7e" : "transparent"
+            }}>
+                <img src={충동구매} alt="충동구매"
+                width="50px" style={{ cursor: "pointer" }}
+                onClick={() => setSelectedTag("충동구매")} />
+            </button>
+            <button style={{
+                backgroundColor: selectedTag === "flex" ? "#a6b9da7e" : "transparent"
+            }}>
+                <img src={flex} alt="flex"
+                width="50px" style={{ cursor: "pointer" }}
+                onClick={() => setSelectedTag("flex")} />
+            </button>
+            <button style={{
+                backgroundColor: selectedTag === "슬픔" ? "#a6b9da7e" : "transparent"
+            }}>
+                <img src={슬픔} alt="슬픔"
+                width="50px" style={{ cursor: "pointer" }}
+                onClick={() => setSelectedTag("슬픔")} />
+            </button>
+            <button style={{
+                backgroundColor: selectedTag === "소확행" ? "#a6b9da7e" : "transparent"
+            }}>
+                <img src={소확행} alt="소확행"
+                width="50px" style={{ cursor: "pointer" }}
+                onClick={() => setSelectedTag("소확행")} />
+            </button>
+        </div>
+        
+        <div className="plus-minus">
+            {type.map((t) => (
+                <button
+                key={t}
+                onClick={() => setActiveType(t)}
+                style={{ color: activeType === t ? "black" : "gray" }}
+                >
+                {t}
+                </button>
+            ))}
             </div>
-        </>
+
+        <div className="wirte-money">
+            <input type="number" placeholder="0원" value={amount} onChange={(e)=> setAmount(e.target.value)} />
+        </div>
+
+        <div className="money-category">
+            {categories.map((row, rowIndex) => (
+            <div className="ct" key={rowIndex}>
+                {row.map((category) => (
+                <button
+                    key={category}
+                    onClick={() => setActiveCategory(category)}
+                    style={{ color: activeCategory === category ? "black" : "gray" }}
+                >
+                    {category}
+                </button>
+                ))}
+            </div>
+            ))}
+        </div>
+
+        <div className="method">
+            {payment.map((p) => (
+                <button
+                key={p}
+                onClick={() => setActivePayment(p)}
+                style={{ color: activePayment === p ? "black" : "gray" }}
+                >
+                {p}
+                </button>
+            ))}
+            </div>
+
+        <div className="write-form">
+            <span></span>
+            <p>오늘의 씀씀</p>
+            <div className="write-form-title">
+                <input type="text" placeholder="오늘의 씀씀" value={note} onChange={(e)=>setNote(e.target.value)} />
+            </div>
+
+        </div>
+        <button onClick={handleSubmit} className="close-button">저장</button>
+    </div>
+</>
     ) 
 }
