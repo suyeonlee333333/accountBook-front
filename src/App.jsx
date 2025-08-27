@@ -1,7 +1,8 @@
 import './App.css';
 import { BrowserRouter, Routes, Route, useNavigate, Link, useParams } from 'react-router-dom';
 import WriteComponent from "./write.jsx";
-import { IoGiftOutline, IoCalendarOutline, IoSettingsOutline, IoInfiniteOutline, IoTodayOutline, IoPodiumOutline } from "react-icons/io5";
+import { IoGiftOutline, IoCalendarOutline, IoSettingsOutline, IoInfiniteOutline,
+  IoTodayOutline, IoPodiumOutline,IoPersonCircleOutline } from "react-icons/io5";
 import Login from "./login.jsx";
 import Calendar from "./calendar.jsx";
 
@@ -17,6 +18,7 @@ export default function App() {
       <button onClick={() => navigate("/stats")}><IoPodiumOutline/></button>
       <button onClick={() => navigate("/todayCheck")}><IoTodayOutline/></button>
       <button onClick={() => navigate("/link")}><IoInfiniteOutline/></button>
+      <button onClick={()=>navigate("login")}><IoPersonCircleOutline /></button>
     </>
 
       
