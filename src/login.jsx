@@ -24,9 +24,9 @@ export default function Login() {
             <button className="login-btn">로그인</button>
 
         <div>
-        <button className="naver-btn">
+        {/* <button className="naver-btn">
             <img src={naver} alt="네이버 로그인" />
-        </button>
+        </button> */}
 
         <button className="kakao-btn"></button>
 
