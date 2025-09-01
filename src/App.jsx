@@ -5,6 +5,7 @@ import { IoGiftOutline, IoCalendarOutline, IoSettingsOutline, IoInfiniteOutline,
   IoTodayOutline, IoPodiumOutline,IoPersonCircleOutline } from "react-icons/io5";
 import Login from "./login.jsx";
 import Calendar from "./calendar.jsx";
+import JoinMembership from "./join-membership.jsx";
 
   
 export default function App() {
@@ -18,7 +19,7 @@ export default function App() {
       <button onClick={() => navigate("/stats")}><IoPodiumOutline/></button>
       <button onClick={() => navigate("/todayCheck")}><IoTodayOutline/></button>
       <button onClick={() => navigate("/link")}><IoInfiniteOutline/></button>
-      <button onClick={()=>navigate("login")}><IoPersonCircleOutline /></button>
+      <button onClick={()=>navigate("/login")}><IoPersonCircleOutline /></button>
     </>
 
       
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/stats" element={null}/>
         <Route path="/todayCheck" element={null}/>
         <Route path="/link" element={null}/>
+        <Route path="/join-membership" element={<JoinMembership/>}/>
       </Routes>
 
 

@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react'; import './App.css';
+import { useState, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
+import './App.css';
 import naver from "./image/btnG_아이콘원형.png";
+import JoinMembership from "./join-membership.jsx";
 
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate=useNavigate();
 
     return (
     <div className='login-container'>
@@ -32,7 +36,8 @@ export default function Login() {
 
         
         </div>
-        <button className="first-login">회원가입</button>
+        <button className="first-login"
+        onClick={()=>navigate("/join-membership")}>회원가입</button>
             </div>
         </div>
 );
