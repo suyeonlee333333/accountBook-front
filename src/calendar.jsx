@@ -61,33 +61,28 @@ export default function Calendar() {
             <button onClick={nextMonth}>▶</button>
         </div>
 
+        <div className="calendar-box">
         <div className="weekdays">
-            {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
-            <div key={day} className="weekday">{day}</div>
+            {["일","월","화","수","목","금","토"].map(d => (
+            <div key={d} className="weekday">{d}</div>
             ))}
         </div>
 
-        <div className="dates" style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)" }}>
+        <div className="dates">
             {dates.map((d, i) =>
             d ? (
                 <div
                 key={d.dateStr}
                 onClick={() => handleDateClick(d.dateStr)}
-                style={{
-                    padding: "10px",
-                    cursor: "pointer",
-                    textAlign: "center",
-                    backgroundColor: selectedDate === d.dateStr ? "#7eacc5ff" : "#E1EFFE"
-                }}
+                className={`date-cell ${selectedDate === d.dateStr ? 'is-selected' : ''}`}
                 >
                 {d.day}
                 </div>
-            ) : (
-                <div key={i}></div>
-            )
+            ) : <div key={i} />
             )}
         </div>
-        
+        </div>
+
         <div className="button-container">
         <button className="write-btn"
         onClick={() => {

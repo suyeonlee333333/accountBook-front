@@ -17,9 +17,6 @@ export default function App() {
     <div className="App">
     <>
       <button onClick={() => navigate("/stats")}><IoPodiumOutline/></button>
-      <button onClick={() => navigate("/todayCheck")}><IoTodayOutline/></button>
-      <button onClick={() => navigate("/link")}><IoInfiniteOutline/></button>
-      <button onClick={()=>navigate("/login")}><IoPersonCircleOutline /></button>
     </>
 
       
@@ -30,11 +27,8 @@ export default function App() {
         <Route path="/date/:date" element={null} />
         <Route path="/writebox" element={<WriteComponent />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/gift" element={null}/>
-        <Route path="/settings" element={null}/>
+
         <Route path="/stats" element={null}/>
-        <Route path="/todayCheck" element={null}/>
-        <Route path="/link" element={null}/>
         <Route path="/join-membership" element={<JoinMembership/>}/>
       </Routes>
 
@@ -42,7 +36,6 @@ export default function App() {
       {/* 하단 네비게이션 바 */}
       <>
         <button onClick={() => navigate("/")}><IoCalendarOutline /></button>
-        <button onClick={() => navigate("/gift")}><IoGiftOutline /></button>
         <button onClick={() => navigate("/settings")}><IoSettingsOutline /></button>
       </>
 
