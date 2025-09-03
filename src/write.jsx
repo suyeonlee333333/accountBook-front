@@ -57,46 +57,52 @@ export default function WritePage() {
     <div className="write-container">
         <div className="emotion-tag">
             <button style={{
-                backgroundColor: selectedTag === "기분전환" ? "#a6b9da7e" : "transparent"
+                backgroundColor: selectedTag === "기분전환" ? "#8eb7bf7e" : "transparent"
             }}>
                 <img src={기분전환} alt="기분전환"
                 width="50px" style={{ cursor: "pointer" }}
                 onClick={() => setSelectedTag("기분전환")}/>
+                <p className="emoction-word">기분전환</p>
             </button>
             <button style={{
-                backgroundColor: selectedTag === "스트레스 해소" ? "#a6b9da7e" : "transparent"
+                backgroundColor: selectedTag === "스트레스 해소" ? "#8eb7bf7e" : "transparent"
             }}>
                 <img src={스트레스} alt="스트레스"
                 width="50px" style={{ cursor: "pointer" }}
                 onClick={() => setSelectedTag("스트레스 해소")} />
+                <p className="emoction-word">스트레스</p>
             </button>
             <button style={{
-                backgroundColor: selectedTag === "충동구매" ? "#a6b9da7e" : "transparent"
+                backgroundColor: selectedTag === "충동구매" ? "#8eb7bf7e" : "transparent"
             }}>
                 <img src={충동구매} alt="충동구매"
                 width="50px" style={{ cursor: "pointer" }}
                 onClick={() => setSelectedTag("충동구매")} />
+                <p className="emoction-word">충동구매</p>
             </button>
             <button style={{
-                backgroundColor: selectedTag === "flex" ? "#a6b9da7e" : "transparent"
+                backgroundColor: selectedTag === "flex" ? "#8eb7bf7e" : "transparent"
             }}>
                 <img src={flex} alt="flex"
                 width="50px" style={{ cursor: "pointer" }}
                 onClick={() => setSelectedTag("flex")} />
+                <p className="emoction-word">flex</p>
             </button>
             <button style={{
-                backgroundColor: selectedTag === "슬픔" ? "#a6b9da7e" : "transparent"
+                backgroundColor: selectedTag === "슬픔" ? "#8eb7bf7e" : "transparent"
             }}>
                 <img src={슬픔} alt="슬픔"
                 width="50px" style={{ cursor: "pointer" }}
                 onClick={() => setSelectedTag("슬픔")} />
+                <p className="emoction-word">슬픔</p>
             </button>
             <button style={{
-                backgroundColor: selectedTag === "소확행" ? "#a6b9da7e" : "transparent"
+                backgroundColor: selectedTag === "소확행" ? "#8eb7bf7e" : "transparent"
             }}>
                 <img src={소확행} alt="소확행"
                 width="50px" style={{ cursor: "pointer" }}
                 onClick={() => setSelectedTag("소확행")} />
+                <p className="emoction-word">소확행</p>
             </button>
         </div>
         
@@ -112,8 +118,8 @@ export default function WritePage() {
             ))}
             </div>
 
-        <div className="wirte-money">
-            <input type="number" placeholder="0원" value={amount} onChange={(e)=> setAmount(e.target.value)} />
+        <div>
+            <input type="number" className="wirte-money" placeholder="0원" value={amount} onChange={(e)=> setAmount(e.target.value)} />
         </div>
 
         <div className="money-category">
@@ -144,11 +150,11 @@ export default function WritePage() {
             ))}
             </div>
 
-        <div className="write-form">
+        <div>
             <span></span>
-            <p>오늘의 씀씀</p>
-            <div className="write-form-title">
-                <input type="text" placeholder="오늘의 씀씀" value={note} onChange={(e)=>setNote(e.target.value)} />
+            <p className="write-form-title">오늘의 씀씀</p>
+            <div>
+                <input type="text" className="write-form" placeholder="오늘의 씀씀" value={note} onChange={(e)=>setNote(e.target.value)} />
             </div>
 
         </div>

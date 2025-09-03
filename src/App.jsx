@@ -6,17 +6,19 @@ import { IoGiftOutline, IoCalendarOutline, IoSettingsOutline, IoInfiniteOutline,
 import Login from "./login.jsx";
 import Calendar from "./calendar.jsx";
 import JoinMembership from "./join-membership.jsx";
+import ExpenseStats from "./ExpenseStats.jsx";
+import IncomeStats from "./IncomeStats.jsx";
 
   
 export default function App() {
 
   const navigate=useNavigate();
-  
+
 
   return (
     <div className="App">
     <>
-      <button onClick={() => navigate("/stats")}><IoPodiumOutline/></button>
+      <button onClick={() => navigate("/expenseStats")}><IoPodiumOutline/></button>
     </>
 
       
@@ -27,8 +29,8 @@ export default function App() {
         <Route path="/date/:date" element={null} />
         <Route path="/writebox" element={<WriteComponent />} />
         <Route path="/login" element={<Login />} />
-
-        <Route path="/stats" element={null}/>
+        <Route path="/expenseStats" element={<ExpenseStats/>} />
+        <Route path="/incomeStats" element={<IncomeStats/>} />
         <Route path="/join-membership" element={<JoinMembership/>}/>
       </Routes>
 

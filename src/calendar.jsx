@@ -53,6 +53,8 @@ export default function Calendar() {
         setSelectedDate(dateStr);
     };
 
+    const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+
     return (
         <>
             <div className="header">
