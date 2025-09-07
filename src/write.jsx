@@ -19,42 +19,73 @@ export default function WritePage() {
     const [activeCategory, setActiveCategory] = useState(null);
     const [activeType, setActiveType] = useState(null);
     const [activePayment, setActivePayment] = useState(null);
+    const { state } = useLocation();
 
     const navigate = useNavigate();
     const location = useLocation();
 
     const dateFromCalendar = location.state?.date;
+    const date = dateFromCalendar || new Date().toISOString().split("T")[0];
 
     const payment =["신용카드","체크카드","현금","계좌이체","상품권","기타"];
-    const type = ["수입","지출"];
-    const categories = [
+    const type = ["지출","수입"];
+    const expenseCategory=[
     ["고정지출", "식비", "교통비", "생필품", "카페"],
     ["도서", "교육", "문화생활", "쇼핑", "미용"],
     ["선물", "건강", "경조사", "의료비", "기타"],
     ];
+    const incomeCategory=[
+        ["월급","부업","용돈","기타"],
+    ];
 
+    const categories = activeType === "수입" ? incomeCategory: expenseCategory
+
+
+    const handleSave = () => {
+
+    if (!activeType) { alert("수입/지출을 선택하세요."); return; }
+    if (!amount || Number(amount) <= 0) { alert("금액을 입력하세요."); return; }
+    if (!activeCategory) { alert("카테고리를 선택하세요."); return; }
+    if (activeType === "지출" && !activePayment) { alert("결제수단을 선택하세요."); return; }
     
-
-
-    const handleClick = () => {
-        setIsActive(!isActive);
+    const newRecord = {
+        id: (crypto?.randomUUID?.() ?? String(Date.now())),
+        date,
+        type: activeType,
+        amount: Number(amount),
+        category: activeCategory,
+        payment: activeType === "지출" ? activePayment : "",
+        tag: activeType === "지출" ? (selectedTag || "") : "",
+        memo: note || ""
     };
 
-    const handleSubmit = () => {
-    const data = {
-        amount: Number(amount) || 0,
-        paymentMethod: "카드", // 기본값으로 카드 설정, 필요시 수정 가능
-        tags: selectedTag ? [selectedTag] : [],
-        memo: note,
-        date: dateFromCalendar || new Date().toISOString().split("T")[0]
+    navigate("/", {state: {justAdded: newRecord}});
+
     };
-    navigate("/", { state: data });
-    };
-    // const onWriteClick = (writebox) => {
-    // navigate('/writebox');}
+
     return (
 <>
     <div className="write-container">
+
+        <div className="plus-minus">
+            {type.map((t) => (
+                <button
+                    key={t}
+                    onClick={() => {
+                        setActiveType(t);
+                        setActiveCategory(null);
+                        setActivePayment(null);
+                        setSelectedTag(null);
+                    }}
+                    style={{ color: activeType === t ? "black" : "gray" }}
+                    >
+                    {t}
+                    </button>
+            ))}
+            </div>
+            
+
+        {activeType === "지출" && (
         <div className="emotion-tag">
             <button style={{
                 backgroundColor: selectedTag === "기분전환" ? "#8eb7bf7e" : "transparent"
@@ -105,21 +136,16 @@ export default function WritePage() {
                 <p className="emoction-word">소확행</p>
             </button>
         </div>
+        )}
         
-        <div className="plus-minus">
-            {type.map((t) => (
-                <button
-                key={t}
-                onClick={() => setActiveType(t)}
-                style={{ color: activeType === t ? "black" : "gray" }}
-                >
-                {t}
-                </button>
-            ))}
-            </div>
-
         <div>
-            <input type="number" className="wirte-money" placeholder="0원" value={amount} onChange={(e)=> setAmount(e.target.value)} />
+            <input
+                type="number"
+                className="wirte-money"
+                placeholder={activeType === "수입" ? "수입 금액" : "지출 금액"}
+                value={amount}
+                onChange={(e)=> setAmount(e.target.value)}
+            />
         </div>
 
         <div className="money-category">
@@ -138,6 +164,7 @@ export default function WritePage() {
             ))}
         </div>
 
+        {activeType === "지출" && (
         <div className="method">
             {payment.map((p) => (
                 <button
@@ -149,6 +176,7 @@ export default function WritePage() {
                 </button>
             ))}
             </div>
+        )}
 
         <div>
             <span></span>
@@ -158,8 +186,8 @@ export default function WritePage() {
             </div>
 
         </div>
-        <button onClick={handleSubmit} className="close-button">저장</button>
+        <button className="close-button" onClick={handleSave}>저장</button>
     </div>
 </>
-    ) 
+    )
 }

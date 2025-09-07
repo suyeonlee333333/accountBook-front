@@ -29,7 +29,7 @@ export default function App() {
         <Route path="/date/:date" element={null} />
         <Route path="/writebox" element={<WriteComponent />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/expenseStats" element={<ExpenseStats/>} />
+        <Route path="/expenseStats" element={<ExpenseStats/>} />s
         <Route path="/incomeStats" element={<IncomeStats/>} />
         <Route path="/join-membership" element={<JoinMembership/>}/>
       </Routes>

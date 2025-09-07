@@ -343,3 +343,156 @@ element.style {
 .monthStats {
     text-align: center;
 }
+
+.record-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 1rem;
+    padding: 0 1rem;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* .record-card {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.record-card p { margin: 0; } */
+
+
+.record-card {
+    --radius: 14px;
+    --border: 3px;
+    --pad: 4%;
+
+    position: relative;
+    border: var(--border) solid #000;
+    border-radius: var(--radius);
+    padding: calc(var(--pad) + 0.5%) var(--pad) var(--pad);
+    background: #fff;
+    box-shadow: 0 2px 0 #000;
+
+    width: 90%; 
+    max-width: 600px;
+    margin: 2% auto;
+}
+
+.rc-date {
+    position: absolute;
+    top: 1%;
+    right: 3%;
+    font-size: 0.8vw;
+    color: #8e8e8e;
+}
+
+.rc-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4%;
+    min-height: 8vh;
+}
+
+.rc-tag {
+    flex: 0 1 auto;
+    max-width: 55%;
+    font-weight: 800;
+    font-size: 1vw;
+    line-height: 1.1;
+    padding: 0.3vw 1vw;
+    border: 0.3vw solid #c40000;
+    border-radius: 999px;
+    color: #111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rc-top-right {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    margin-left: auto;
+}
+
+.rc-category {
+    font-size: 1vw;
+    font-weight: 900;
+    color: #111;
+    white-space: nowrap;
+}
+
+.rc-payment {
+    font-size: 1vw;
+    font-weight: 700;
+    color: #b5b5b5;
+    white-space: nowrap;
+}
+
+.rc-dot {
+    color: #cfcfcf;
+    font-size: 2vw;
+    user-select: none;
+}
+
+.rc-amount {
+    font-size: 1.5vw;
+    font-weight: 900;
+    margin: 3% 0 2%;
+    letter-spacing: 1px;
+}
+.rc-amount.expense { color: #d10000; } /* 지출: 빨강 */
+.rc-amount.income  { color: #0da45e; } /* 수입: 초록 */
+
+.rc-amount .rc-won {
+    font-size: 0.8em;
+    margin-left: 0.3vw;
+}
+
+.rc-divider {
+    height: 0.4vh;
+    background: #9a9a9a;
+    opacity: 0.8;
+    margin: 2% -1% 3%;
+}
+
+.rc-memo {
+    padding-top: 1%;
+    padding-bottom: 2%;
+}
+
+.rc-memo-title {
+    font-size: 1vw;
+    font-weight: 900;
+    color: #111;
+    margin-bottom: 1%;
+}
+
+.rc-memo-text {
+    font-size: 0.8vw;
+    color: #8b8b8b;
+    line-height: 1.5;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: keep-all;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 640px) {
+    .record-card { width: 95%; padding: 6%; }
+    .rc-tag { font-size: 4vw; border-width: 1vw; }
+    .rc-category { font-size: 4.2vw; }
+    .rc-payment { font-size: 3.8vw; }
+    .rc-amount { font-size: 5.5vw; }
+    .rc-memo-title { font-size: 4vw; }
+    .rc-memo-text { font-size: 3.5vw; }
+}
