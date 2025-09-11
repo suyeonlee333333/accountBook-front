@@ -1,9 +1,9 @@
-    import { useState, useEffect } from 'react';  
+    import { useState, useEffect,useMemo } from 'react';  
     import { useNavigate,useLocation } from 'react-router-dom';
     import './App.css';
     import DailyStatFetcher from "./DailyStatFetcher.jsx";
     import RecordCards from './RecordCards.jsx';
-    import { IoPencilSharp } from "react-icons/io5";
+    import { IoPodiumOutline } from "react-icons/io5";
 
     export default function Calendar() {
     const navigate = useNavigate();
@@ -51,32 +51,50 @@
     const handleDateClick = (dateStr) => setSelectedDate(dateStr);
 
     useEffect(() => {
-        const added = location.state?.justAdded;
-        if (!added) return;
+    const added = location.state?.justAdded;
+    if (!added) return;
 
-        setRecords(prev => {
-        const next = [...prev, added];
-        localStorage.setItem("records", JSON.stringify(next));
-        return next;
-        });
-        setSelectedDate(added.date);
+    setRecords(prev => {
+        const without = prev.filter(r => r.id !== added.id);
+        return [added, ...without];
+    });
+    setSelectedDate(added.date);
 
 
-        window.history.replaceState({}, "", location.pathname);
-    }, [location.state, location.pathname]);
+    navigate(location.pathname, { replace: true, state: null });
+    }, [location.state, location.pathname, navigate]);
 
     useEffect(() => {
+    const seen = new Set();
+    const deduped = records.filter(r => {
+        if (!r?.id || seen.has(r.id)) return false;
+        seen.add(r.id);
+        return true;
+        });
+        if (deduped.length !== records.length) {
+        setRecords(deduped);
+        return;
+        }
         localStorage.setItem("records", JSON.stringify(records));
     }, [records]);
 
 
     return (
-        <>
-        <div className="header">
-            <button onClick={prevMonth}>◀</button>
-            <span>{currentDate.getMonth() + 1}월</span>
-            <button onClick={nextMonth}>▶</button>
-        </div>
+    <>
+    <div className="header">
+    <button
+        className="month-stat" onClick={() => navigate("/expenseStats")}>
+        <IoPodiumOutline />
+    </button>
+
+    <span className="month-nav">
+        <button onClick={prevMonth}>◀</button>
+        <span>{currentDate.getMonth() + 1}월</span>
+        <button onClick={nextMonth}>▶</button>
+    </span>
+
+    <div className="spacer"></div>
+</div>
 
         <div className="calendar-box">
             <div className="weekdays">
@@ -99,19 +117,7 @@
             )}
             </div>
         </div>
-
-        <div className="button-container">
-            <button
-            className="write-btn"
-            onClick={() => {
-                if (!selectedDate) { alert("날짜를 먼저 선택하세요!"); return; }
-                navigate("/writebox", { state: { date: selectedDate } });
-            }}
-            >
-            <IoPencilSharp />
-            </button>
-        </div>
-
+        
         <div className="records mt-4">
             {selectedDate ? (
             <DailyStatFetcher d={{ type: "this", dateStr: selectedDate }} />
@@ -124,10 +130,7 @@
             {records
             .filter(r => r.date === selectedDate) 
             .map((rec) => (
-                <RecordCards
-                key={rec.id ?? `${rec.date}-${rec.category}-${rec.amount}-${Math.random()}`}
-                record={rec}
-                />
+                <RecordCards key={rec.id} record={rec} />
             ))}
         </div>
         </>

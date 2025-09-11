@@ -9,6 +9,13 @@ html, body, #root {
     padding: 0;
     font-family: 'Pretendard',system-ui, sans-serif;
 }
+html, body {
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+body::-webkit-scrollbar { width: 0; }
 
 div { box-sizing: border-box; }
 
@@ -17,15 +24,39 @@ div { box-sizing: border-box; }
 
 .header {
 display: flex;
-justify-content: center;
+justify-content: space-between;
 align-items: center;
 gap: 20px;
 margin-bottom:10px;
 }
 
+.month-stat {
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.month-nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* 항상 가운데 */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.spacer {
+  width: 32px; /* 통계버튼과 균형 맞춤, 필요 없으면 지워도 됨 */
+}
+
 
 .App {
     background-color:#b7eae6;
+    position: relative;
 }
 
 .weekdays, .dates {
@@ -78,12 +109,6 @@ gap: 50px;
 width: 100%;
 }
 
-.button-container {
-display: flex;
-justify-content: flex-end;
-padding: 10px;
-}
-
 .write-btn {
 background-color:#5fb4c7c1;
 color: white;
@@ -100,6 +125,10 @@ margin: 3%;
     display: grid;
     padding:0;
 
+}
+
+.stats-icon {
+    flex: 0;
 }
 
 
@@ -345,13 +374,36 @@ element.style {
 }
 
 .record-list {
-    max-height: 300px;
-    overflow-y: auto;
     margin-top: 1rem;
-    padding: 0 1rem;
     flex-wrap: wrap;
     gap: 12px;
+
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
+
+.fab-write {
+    position: sticky;
+    margin-left: auto;
+    bottom: 3%;
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 50%;
+    background: #5ed5cf;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(0,0,0,.2);
+    cursor: pointer;
+    z-index: 999;
+    margin-right: 12px;
+}
+
+.fab-write:active { transform: translateY(1px); }
 
 /* .record-card {
     background: #f9f9f9;
@@ -369,130 +421,257 @@ element.style {
 .record-card p { margin: 0; } */
 
 
-.record-card {
-    --radius: 14px;
-    --border: 3px;
+    .record-card {
+    --radius: 7px;
     --pad: 4%;
+
+    
 
     position: relative;
     border: var(--border) solid #000;
     border-radius: var(--radius);
-    padding: calc(var(--pad) + 0.5%) var(--pad) var(--pad);
-    background: #fff;
-    box-shadow: 0 2px 0 #000;
+    background: #dff7fa;
+    padding: 4%;
+    padding-top:1%;
+    padding-bottom: 2%;
 
-    width: 90%; 
+    width: 90%;
     max-width: 600px;
-    margin: 2% auto;
+    margin: auto;
+    }
+
+    .calendar-container {
+    position: relative;  /* 버튼 기준점 */
+    width: 100%;
+    height: 100%;
 }
 
-.rc-date {
-    position: absolute;
-    top: 1%;
-    right: 3%;
-    font-size: 0.8vw;
-    color: #8e8e8e;
-}
 
-.rc-top {
+    /* 상단: 감정태그 */
+    .rc-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 4%;
-    min-height: 8vh;
-}
+    gap: 2%;
+    min-height: 6vh;
+    }
 
-.rc-tag {
-    flex: 0 1 auto;
-    max-width: 55%;
-    font-weight: 800;
-    font-size: 1vw;
-    line-height: 1.1;
-    padding: 0.3vw 1vw;
-    border: 0.3vw solid #c40000;
-    border-radius: 999px;
-    color: #111;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.rc-top-right {
+    /* 칩 컨테이너 */
+    .rc-chips {
     display: flex;
     align-items: center;
-    gap: 1vw;
-    margin-left: auto;
-}
+    gap: 0.6vw;
+    flex-wrap: nowrap;     /* 줄바꿈 없이 한 줄 */          /* 칩 간격 */
+    overflow-x: auto;      /* 많으면 가로 스크롤 (스크롤바는 아래에서 숨김) */
+    padding: 4px 0;
+    }
 
-.rc-category {
-    font-size: 1vw;
-    font-weight: 900;
+    /* 감정 태그 칩 */
+    .rc-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3vw 0.8vw;
+    border-radius: 999px;
+    font-weight: bold;
+    font-size: 0.85vw;   /* 조금만 작게 */
     color: #111;
     white-space: nowrap;
-}
+    border: 0.1vw solid rgba(0,0,0,0.08);
+    box-shadow: 0 0.1vw 0 rgba(0,0,0,0.15);
+    }
 
-.rc-payment {
-    font-size: 1vw;
+.rc-chips::-webkit-scrollbar { height: 0; width: 0; }
+.rc-chips { scrollbar-width: none; -ms-overflow-style: none; }
+
+
+    /* 결제수단 */
+    .rc-payment {
+    font-size: 0.85vw;
     font-weight: 700;
     color: #b5b5b5;
     white-space: nowrap;
-}
+    margin-left: auto;
+    }
 
-.rc-dot {
-    color: #cfcfcf;
-    font-size: 2vw;
-    user-select: none;
-}
-
-.rc-amount {
-    font-size: 1.5vw;
-    font-weight: 900;
-    margin: 3% 0 2%;
-    letter-spacing: 1px;
-}
-.rc-amount.expense { color: #d10000; } /* 지출: 빨강 */
-.rc-amount.income  { color: #0da45e; } /* 수입: 초록 */
-
-.rc-amount .rc-won {
-    font-size: 0.8em;
-    margin-left: 0.3vw;
-}
-
-.rc-divider {
-    height: 0.4vh;
+    /* 구분선 */
+    .rc-divider {
+    height: 0.2vh;
     background: #9a9a9a;
     opacity: 0.8;
-    margin: 2% -1% 3%;
-}
+    margin: 1.4% 1% 1.4%;
+    }
 
-.rc-memo {
-    padding-top: 1%;
-    padding-bottom: 2%;
-}
+    /* 중단: 카테고리 · 금액 · 결제수단 */
+    .rc-main {
+    display: flex;
+    align-items: center;
+    gap: 2%;
+    margin-left: 2%;
+    }
 
-.rc-memo-title {
-    font-size: 1vw;
-    font-weight: 900;
+    /* 카테고리 */
+    .rc-category {
+    font-size: 0.9vw;   /* 1.1vw → 0.9vw */
+    font-weight: bold;
     color: #111;
-    margin-bottom: 1%;
-}
+    margin-right: 1vw;
+    white-space: nowrap;
+    }
 
-.rc-memo-text {
-    font-size: 0.8vw;
-    color: #8b8b8b;
+    /* 금액 */
+    .rc-amount {
+    font-size: 1.3vw;   /* 1.6vw → 1.3vw (강조 유지) */
+    font-weight: bold;
+    letter-spacing: 0.02em;
+    }
+    .rc-amount.expense { color: #d10000; }
+    .rc-amount.income  { color: #0da45e; }
+
+    .rc-amount .rc-won {
+    font-size: 0.8em;
+    margin-left: 0.3vw;
+    }
+
+    /* 메모 */
+    .rc-memo { padding-top: 0.5%; padding-bottom: 1.2%; }
+
+    .rc-memo-title {
+    font-size: 0.9vw;   /* 1vw → 0.9vw */
+    font-weight: bold;
+    color: #737473;
+    margin-bottom: 2%;
+    margin-left: 2%;
+    }
+
+    .rc-memo-bubble {
+    background: #fcfbf9;
+    border-radius: 0.7vw;
+    padding: 0.83vw 1.5vw;
+    font-size: 0.85vw;   /* 0.95vw → 0.85vw */
+    color: #1f3b1f;
     line-height: 1.5;
-    margin: 0;
-    white-space: pre-wrap;
-    word-break: keep-all;
+    font-weight: bold;
+    position: relative;
+    }
+
+    /* 감정태그 컨테이너: 가로 나열 + 간격 */
+.emotion-tag {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;          /* 버튼 사이 간격 */
+    padding: 10px 0;
+    margin-top: 10px;
+    overflow-x: auto;
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 0;   /* 버튼이 많아지면 옆으로 스크롤 */
 }
 
-/* 모바일 최적화 */
-@media (max-width: 640px) {
-    .record-card { width: 95%; padding: 6%; }
-    .rc-tag { font-size: 4vw; border-width: 1vw; }
-    .rc-category { font-size: 4.2vw; }
-    .rc-payment { font-size: 3.8vw; }
-    .rc-amount { font-size: 5.5vw; }
-    .rc-memo-title { font-size: 4vw; }
-    .rc-memo-text { font-size: 3.5vw; }
+/* 감정 버튼 */
+.emotion-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    background: transparent;
+    border-radius: 12px;
+    padding: 6px 8px;
+    cursor: pointer;
+
+    transition: transform .1s ease, background .2s ease;
 }
+.emotion-btn:hover { transform: translateY(-2px); }
+.emotion-btn.on { background: #8eb7bf7e; } /* 선택 시 배경 */
+.emotion-tag::-webkit-scrollbar { height: 0; width: 0; }
+.emotion-tag { scrollbar-width: none; -ms-overflow-style: none; }
+
+.emotion-btn img {
+    width: 50px;
+    height: 50px;
+}
+.emotion-word {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #333;
+}
+
+/* 월 표시 줄 */
+.monthStats { margin: 10px 0 0; font-size: 18px; }
+.monthNum { font-size: 22px; }
+
+.month-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0 6px;
+}
+.year-btn {
+    border: none;
+    background: #f2f4f6;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(32px, 1fr));
+    gap: 6px;
+    flex: 1;
+}
+.month-chip {
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 10px;
+    padding: 6px 0;
+    font-weight: 700;
+    cursor: pointer;
+}
+.month-chip.active {
+    background: #5ed5cf;
+    color: #fff;
+    border-color: #5ed5cf;
+}
+
+/* 카테고리 pill */
+.cat-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 8px 4px;
+}
+.cat-pill {
+    border: 1px solid #d8dde3;
+    background: #fff;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.cat-pill.on {
+    background: #222;
+    color: #fff;
+    border-color: #222;
+}
+
+/* 카드 리스트 제목/빈 상태 */
+.cat-title { margin: 14px 10px 4px; font-size: 16px; }
+.empty { color: #889; margin-left: 10px; }
+
+
+
+    /* 모바일 최적화 */
+    @media (max-width: 640px) {
+    .record-card { width: 95%; padding: 6%; }
+    .rc-date { font-size: 2.6vw; }
+    .rc-chip { font-size: 3vw; padding: 1.3vw 2.4vw; border-width: 0.4vw; }
+    .rc-payment { font-size: 3vw; }
+    .rc-category { font-size: 3.4vw; }
+    .rc-amount { font-size: 4.5vw; }   /* 금액은 여전히 강조 */
+    .rc-memo-title { font-size: 3.2vw; }
+    .rc-memo-bubble { font-size: 3vw; border-radius: 2.4vw; }
+    }
