@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import './App.css';
 
 export default function JoinMembership() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const navigate = useNavigate();
 
     return (
         <div className="sign-up">
@@ -33,8 +35,8 @@ export default function JoinMembership() {
                 <p>안녕하세요</p>
             }}></input>
         </div>
-        <button className="yesorno">가입하기</button>
-        <button className="yesorno">닫기</button>
+        <button className="yesorno" onClick={()=>navigate("/")}>가입하기</button>
+        <button className="yesorno" onClick={()=>navigate("/login")}>닫기</button>
 
         
         </div>

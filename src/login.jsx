@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {useNavigate} from 'react-router-dom';
 import './App.css';
 import naver from "./image/btnG_아이콘원형.png";
+import google from "./image/googleImg.png";
 import JoinMembership from "./join-membership.jsx";
 
 export default function Login() {
@@ -27,12 +28,14 @@ export default function Login() {
             />
             <button className="login-btn">로그인</button>
 
-        <div>
-        {/* <button className="naver-btn">
-            <img src={naver} alt="네이버 로그인" />
-        </button> */}
+        <div className="social-login">
+        <button>
+            <img className="naver-btn" src={naver} alt="네이버 로그인" />
+        </button>
 
-        <button className="kakao-btn"></button>
+        <button>
+            <img src={google} alt="구글 로그인"/>
+        </button>
 
         
         </div>

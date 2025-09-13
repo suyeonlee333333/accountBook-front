@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pie, getElementAtEvent } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
-import RecordCard from "./RecordCards.jsx";
+import StatsCard from "./stats-card.jsx";
 
 function monthKeyFromDate(d) {
     const dt = typeof d === "string" ? new Date(d) : d;
@@ -174,7 +174,7 @@ function monthKeyFromDate(d) {
                 {filteredForCards.length === 0 ? (
                 <p className="empty">해당 카테고리 지출 내역이 없습니다.</p>
                 ) : (
-                filteredForCards.map((rec) => <RecordCard key={rec.id} record={rec} />)
+                filteredForCards.map((rec) => <StatsCard key={rec.id} record={rec} />)
                 )}
             </div>
             </>
